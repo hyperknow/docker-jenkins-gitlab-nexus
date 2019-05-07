@@ -49,23 +49,18 @@ services:
     networks:
       - devops   
       
-  web:
-    image: 'gitlab/gitlab-ce'
-    container_name: 'gitlab'
-    restart: always
-    hostname: 127.0.0.1
-    environment:
-      GITLAB_OMNIBUS_CONFIG: |
-        external_url 'http://127.0.0.1:50080'
-        gitlab_rails['gitlab_shell_ssh_port'] = 2224
-    networks:
-      - gitlab-network
-    ports:
-      - '50080:50080'
-      - '50443:443'
-      - '50022:22'
-    volumes:
-      - '/srv/gitlab/config:/etc/gitlab'
-      - '/srv/gitlab/logs:/var/log/gitlab'
-      - '/srv/gitlab/data:/var/opt/gitlab'
 
+  gitlab-ce:
+    ports:
+      - '8443:443'
+      - '8082:80'
+      - '8022:22'
+    container_name: gitlab
+    restart: always
+    volumes:
+      - 'gitlab_config:/etc/gitlab'
+      - 'gitlab_logs:/var/log/gitlab'
+      - 'gitlab_data:/var/opt/gitlab'
+    image: 'gitlab/gitlab-ce:latest'
+    networks:
+      - devops
